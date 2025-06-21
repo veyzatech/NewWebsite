@@ -1794,6 +1794,8 @@ body .social a {
 
 .contact-form input[type=text],
 .contact-form input[type=email],
+.contact-form input[type=tel],
+.contact-form select,
 .contact-form textarea {
     font-family: 'Ss Amberosa Block', sans-serif;
     font-weight: 300;
@@ -1806,10 +1808,31 @@ body .social a {
     width: 100%;
     padding: 0;
     margin-bottom: 40px;
+    background: transparent;
+}
+
+.contact-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%2362408c" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+.contact-form select option {
+    background-color: #fff;
+    color: #62408c;
+    padding: 8px;
 }
 
 .contact-form input[type=text]::-webkit-input-placeholder,
 .contact-form input[type=email]::-webkit-input-placeholder,
+.contact-form input[type=tel]::-webkit-input-placeholder,
+.contact-form select:invalid,
 .contact-form textarea::-webkit-input-placeholder {
     font-family: 'Ss Amberosa Block', sans-serif;
     color: #62408c;
@@ -1820,6 +1843,7 @@ body .social a {
 
 .contact-form input[type=text]::-moz-placeholder,
 .contact-form input[type=email]::-moz-placeholder,
+.contact-form input[type=tel]::-moz-placeholder,
 .contact-form textarea::-moz-placeholder {
     font-family: 'Ss Amberosa Block', sans-serif;
     color: #62408c;
@@ -1831,6 +1855,7 @@ body .social a {
 
 .contact-form input[type=text]:-ms-input-placeholder,
 .contact-form input[type=email]:-ms-input-placeholder,
+.contact-form input[type=tel]:-ms-input-placeholder,
 .contact-form textarea:-ms-input-placeholder {
     font-family: 'Ss Amberosa Block', sans-serif;
     color: #62408c;
@@ -1841,6 +1866,7 @@ body .social a {
 
 .contact-form input[type=text]:-moz-placeholder,
 .contact-form input[type=email]:-moz-placeholder,
+.contact-form input[type=tel]:-moz-placeholder,
 .contact-form textarea:-moz-placeholder {
     font-family: 'Ss Amberosa Block', sans-serif;
     color: #62408c;

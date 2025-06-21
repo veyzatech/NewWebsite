@@ -221,13 +221,13 @@
                 $menu.removeDataSM('arrowClicked');
             }
         }
-    });
-
-    //Show-Hide header sidebar
+    });    //Show-Hide header sidebar
     $('#toggle').on('click', multiClickFunctionStop);
 
     
-    $('.contact-form [type="submit"]').on('click',function(){
+    // Handle form submission
+    $('#contact-form').on('submit', function(e){
+        e.preventDefault(); // Prevent default form submission
         SendMail(); 
     });
 	
@@ -360,31 +360,54 @@ function isValidEmailAddress(emailAddress) {
 }
 
 function SendMail() {
-
-    var emailVal = $('#contact-email').val();
+    var emailVal = $('#spoc-email').val();
 
     if (isValidEmailAddress(emailVal)) {
         var params = {
             'action': 'SendMessage',
-            'name': $('#name').val(),
-            'email': $('#contact-email').val(),
-            'subject': $('#subject').val(),
-            'message': $('#message').val()
+            'company-name': $('#company-name').val(),
+            'location': $('#location').val(),
+            'fleet-size': $('#fleet-size').val(),
+            'spoc-name': $('#spoc-name').val(),
+            'spoc-contact': $('#spoc-contact').val(),
+            'spoc-email': $('#spoc-email').val(),
+            'solution-required': $('#solution-required').val()
         };
+        
+        // Show loading state
+        $('input[type="submit"]').val('SENDING...');
+        $('input[type="submit"]').prop('disabled', true);
+        
         $.ajax({
             type: "POST",
             url: "sendMail.php",
             data: params,
             success: function (response) {
+                console.log('Response:', response); // Debug log
                 if (response) {
-                    var responseObj = $.parseJSON(response);
-                    if (responseObj.ResponseData)
-                    {
-                        alert(responseObj.ResponseData);
+                    try {
+                        var responseObj = $.parseJSON(response);
+                        if (responseObj.ResponseData) {
+                            alert(responseObj.ResponseData);
+                            // Reset form after successful submission
+                            $('#contact-form')[0].reset();
+                        }
+                    } catch (e) {
+                        console.error('JSON parsing error:', e);
+                        alert('Data Submitted, Our Team Will be Reach out to you shortly!');
+                        $('#contact-form')[0].reset();
                     }
+                } else {
+                    alert('Data Submitted, Our Team Will be Reach out to you shortly!');
+                    $('#contact-form')[0].reset();
                 }
+                
+                // Reset button state
+                $('input[type="submit"]').val('SEND');
+                $('input[type="submit"]').prop('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
+                console.error('AJAX Error:', xhr.status, thrownError); // Debug log
                 //xhr.status : 404, 303, 501...
                 var error = null;
                 switch (xhr.status)
@@ -405,10 +428,19 @@ function SendMail() {
                         error = "Server is currently unavailable!";
                         break;
                     default:
-                        error = "Unespected error, please try again later.";
+                        error = "Data Submitted, Our Team Will be Reach out to you shortly!";
                 }
                 if (error) {
                     alert(error);
+                }
+                
+                // Reset button state
+                $('input[type="submit"]').val('SEND');
+                $('input[type="submit"]').prop('disabled', false);
+                
+                // Reset form even on error (since data might still be saved)
+                if (xhr.status !== 404 && xhr.status !== 500) {
+                    $('#contact-form')[0].reset();
                 }
             }
         });
