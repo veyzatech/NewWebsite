@@ -70,44 +70,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'SendMessage') {
     // Send email
     $send_email = mail($to, $subject, $message, $headers);
     
-    // Save to CSV
-    $csvFile = 'sales_leads.csv';
-    $csvExists = file_exists($csvFile);
-    
-    // Prepare CSV data
-    $csvData = [
-        date('Y-m-d H:i:s'),
-        $companyName,
-        $location,
-        ($fleetSizeDisplay[$fleetSize] ?? $fleetSize),
-        $spocName,
-        $spocContact,
-        $spocEmail,
-        ($solutionDisplay[$solutionRequired] ?? $solutionRequired)
-    ];
-    
-    // Open CSV file for writing
-    $file = fopen($csvFile, 'a');
-    
-    // Add header row if file is new
-    if (!$csvExists) {
-        fputcsv($file, [
-            'Date & Time',
-            'Company Name',
-            'Location',
-            'Fleet Size',
-            'SPOC Name',
-            'SPOC Contact',
-            'SPOC Email',
-            'Solution Required'
-        ]);
-    }
-    
-    // Add data row
-    fputcsv($file, $csvData);
-    fclose($file);
-    
-    // Always return success message (whether email sent or not, data is saved to CSV)
+    // Return success message
     echo json_encode(['ResponseData' => 'Data Submitted, Our Team Will be Reach out to you shortly!']);
 }
 ?>

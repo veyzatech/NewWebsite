@@ -1792,6 +1792,31 @@ body .social a {
     color: #62408c;
 }
 
+/* Google Form iframe styling */
+.contact-form iframe {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+/* Responsive iframe */
+@media screen and (max-width: 1020px) {
+    .contact-form iframe {
+        height: 700px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .contact-form iframe {
+        height: 600px;
+        width: 100%;
+    }
+}
+
+/* Remove old form field styles as they're no longer needed */
+/* .contact-form input[type=text], ... */
+
+
 .contact-form input[type=text],
 .contact-form input[type=email],
 .contact-form input[type=tel],

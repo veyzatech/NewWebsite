@@ -3,11 +3,11 @@
 
 <head>
     <title>Veyza Home</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
     <meta name="description" content="Template by CocoBasic" />
     <meta name="keywords" content="HTML, CSS, JavaScript, PHP" />
     <meta name="author" content="CocoBasic" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" href="images/favicon.ico" />
     <link href='https://fonts.googleapis.com/css?family=League+Script%7CPoppins:300,400,500,600,700%7CMontserrat:900'
@@ -59,7 +59,6 @@
                                     <li><a href="#contact"><span class="menu_text">Contacts</span></a></li>
                                     <li><a href="https://app.veyza.in" target="_blank" rel="noopener"><span class="menu_text">Login</span></a>
                                     </li>
-                                    <li><a href="sales-leads.php"><span class="menu_text">Sales Leads</span></a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -246,33 +245,15 @@
                             </div>
                         </div>                        <div class="contact-page-right">
                             <div class="contact-form">
-                                <form id="contact-form" method="POST">
-                                    <p><input id="company-name" type="text" name="company-name" placeholder="Company Name" required></p>
-                                    <p><input id="location" type="text" name="location" placeholder="Location" required></p>
-                                    <p>
-                                        <select id="fleet-size" name="fleet-size" required>
-                                            <option value="">Select Fleet Size</option>
-                                            <option value="less-than-50">Less than 50</option>
-                                            <option value="50-100">50-100</option>
-                                            <option value="above-100">Above 100</option>
-                                        </select>
-                                    </p>
-                                    <p><input id="spoc-name" type="text" name="spoc-name" placeholder="SPOC Name" required></p>
-                                    <p><input id="spoc-contact" type="tel" name="spoc-contact" placeholder="SPOC Contact" required></p>
-                                    <p><input id="spoc-email" type="email" name="spoc-email" placeholder="SPOC Email" required></p>
-                                    <p>
-                                        <select id="solution-required" name="solution-required" required>
-                                            <option value="">Select Solution Required</option>
-                                            <option value="unified-view">Unified View</option>
-                                            <option value="control-tower-services">Control Tower Services</option>
-                                            <option value="mobile-app-tracking">Mobile App Tracking Solution</option>
-                                        </select>
-                                    </p>
-                                    <p class="contact-submit-holder">
-                                        <input type="submit" value="SEND" id="submit-btn">
-                                        <div id="form-message" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
-                                    </p>
-                                </form>
+                                <!-- Google Form Embed -->
+                                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd6LCWpyPRkaBF3CkWcOwDOfrHuogNuppIIDmCOnYP7uqBNrA/viewform?embedded=true" 
+                                        width="100%" 
+                                        height="800" 
+                                        frameborder="0" 
+                                        marginheight="0" 
+                                        marginwidth="0">
+                                    Loading…
+                                </iframe>
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -296,7 +277,7 @@
                             <li><a href="#services" target="_self">Services</a></li>
                             <li><a href="#testimonials" target="_self">Testimonials</a></li>
                             <li><a href="#contact" target="_self">Contacts</a></li>
-                            <li><a href="https://app.veyza.in" target="_blank">Login</a></li>
+                            <li><a href="https://app.veyza.in" target="_blank" rel="noopener">Login</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -321,68 +302,8 @@
     
     <script>
     $(document).ready(function() {
-        $('#contact-form').on('submit', function(e) {
-            e.preventDefault();
-            
-            var formData = $(this).serialize();
-            var submitBtn = $('#submit-btn');
-            var messageDiv = $('#form-message');
-            
-            // Disable submit button and show loading
-            submitBtn.prop('disabled', true).val('SENDING...');
-            messageDiv.hide();
-            
-            $.ajax({
-                url: 'contact-form-handler.php',
-                method: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        messageDiv
-                            .removeClass('error')
-                            .addClass('success')
-                            .css({
-                                'background-color': '#d4edda',
-                                'color': '#155724',
-                                'border': '1px solid #c3e6cb'
-                            })
-                            .text(response.message)
-                            .show();
-                        
-                        // Reset form
-                        $('#contact-form')[0].reset();
-                    } else {
-                        messageDiv
-                            .removeClass('success')
-                            .addClass('error')
-                            .css({
-                                'background-color': '#f8d7da',
-                                'color': '#721c24',
-                                'border': '1px solid #f5c6cb'
-                            })
-                            .text(response.message)
-                            .show();
-                    }
-                },
-                error: function() {
-                    messageDiv
-                        .removeClass('success')
-                        .addClass('error')
-                        .css({
-                            'background-color': '#f8d7da',
-                            'color': '#721c24',
-                            'border': '1px solid #f5c6cb'
-                        })
-                        .text('An error occurred. Please try again.')
-                        .show();
-                },
-                complete: function() {
-                    // Re-enable submit button
-                    submitBtn.prop('disabled', false).val('SEND');
-                }
-            });
-        });
+        // Google Form is handled by Google - no custom JavaScript needed
+        console.log('Google Form loaded successfully');
     });
     </script>
 </body>
