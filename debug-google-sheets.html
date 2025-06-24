@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Google Sheets Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .debug-section {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 300px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug Google Sheets Form Integration</h1>
+    
+    <div class="debug-section">
+        <h3>Current Configuration:</h3>
+        <p><strong>Google Apps Script URL:</strong> <span id="script-url"></span></p>
+        <p><strong>Test Status:</strong> <span id="status">Ready to test</span></p>
+    </div>    <div class="debug-section">
+        <h3>Quick Tests:</h3>
+        <button onclick="testConnection()">Test Connection (JSONP)</button>
+        <button onclick="testWithMinimalData()">Test with Minimal Data</button>
+        <button onclick="openInBrowser()">Open Script URL in Browser</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <form id="debug-form">
+        <h3>Full Form Test:</h3>
+        <div class="form-group">
+            <input type="text" name="company-name" placeholder="Company Name *" value="Test Company" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="location" placeholder="Location *" value="Test Location" required>
+        </div>        <div class="form-group">
+            <select name="fleet-size" title="Fleet Size" required>
+                <option value="">Select Fleet Size</option>
+                <option value="less-than-50" selected>Less than 50</option>
+                <option value="50-100">50-100</option>
+                <option value="above-100">Above 100</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" name="spoc-name" placeholder="SPOC Name *" value="Test Person" required>
+        </div>
+        <div class="form-group">
+            <input type="tel" name="spoc-contact" placeholder="SPOC Contact *" value="1234567890" required>
+        </div>
+        <div class="form-group">
+            <input type="email" name="spoc-email" placeholder="SPOC Email *" value="test@example.com" required>
+        </div>        <div class="form-group">
+            <select name="solution-required" title="Solution Required" required>
+                <option value="">Select Solution Required</option>
+                <option value="unified-view" selected>Unified View</option>
+                <option value="control-tower-services">Control Tower Services</option>
+                <option value="mobile-app-tracking">Mobile App Tracking Solution</option>
+            </select>
+        </div>
+        <button type="submit">Submit Full Form</button>
+    </form>
+
+    <div id="result"></div>
+
+    <div class="debug-section">
+        <h3>Debug Log:</h3>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYYoMq4lKyyE-Gj5Hteh_yWeuEodq-BakbIxQnmowod9tTZBD7wX6nOPeQAZ4OH6Vn/exec';
+        
+        // Display current configuration
+        document.getElementById('script-url').textContent = GOOGLE_SCRIPT_URL;
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+
+        function openInBrowser() {
+            log('Opening Google Apps Script URL in new tab...');
+            window.open(GOOGLE_SCRIPT_URL, '_blank');
+            log('If the script is working, you should see a JSON response in the new tab');
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = type;
+            resultDiv.textContent = message;
+            resultDiv.style.display = 'block';
+        }
+
+        function updateStatus(status) {
+            document.getElementById('status').textContent = status;
+        }        async function testConnection() {
+            log('Testing connection to Google Apps Script...');
+            updateStatus('Testing connection...');
+            
+            // Use JSONP method to avoid CORS issues when testing locally
+            const testUrl = GOOGLE_SCRIPT_URL + '?callback=handleConnectionTest';
+            
+            // Create a script tag for JSONP request
+            const script = document.createElement('script');
+            script.src = testUrl;
+            
+            // Set up timeout
+            const timeout = setTimeout(() => {
+                document.head.removeChild(script);
+                log('Connection test timed out (30 seconds)');
+                showResult('Connection test timed out. This might be due to local testing restrictions.', 'error');
+                updateStatus('Connection Timeout');
+                
+                // Suggest alternative
+                log('Alternative: Try using "Test with Minimal Data" instead');
+                log('Or open this file through a web server (not file://)');
+            }, 30000);
+            
+            // Success callback
+            window.handleConnectionTest = function(data) {
+                clearTimeout(timeout);
+                document.head.removeChild(script);
+                log(`JSONP response received: ${JSON.stringify(data)}`);
+                showResult('Connection test successful via JSONP!', 'success');
+                updateStatus('Connection OK');
+                delete window.handleConnectionTest;
+            };
+            
+            // Error handler
+            script.onerror = function() {
+                clearTimeout(timeout);
+                document.head.removeChild(script);
+                log('JSONP request failed - trying direct POST instead...');
+                
+                // Fallback to direct POST test
+                testWithMinimalData();
+                delete window.handleConnectionTest;
+            };
+            
+            document.head.appendChild(script);
+            log('JSONP request sent...');
+        }        async function testWithMinimalData() {
+            log('Testing with minimal data...');
+            updateStatus('Testing minimal data...');
+            
+            const params = new URLSearchParams();
+            params.append('company-name', 'Debug Test Company');
+            params.append('location', 'Debug Test Location');
+            params.append('fleet-size', 'less-than-50');
+            params.append('spoc-name', 'Debug Test Person');
+            params.append('spoc-contact', '1234567890');
+            params.append('spoc-email', 'debug@test.com');
+            params.append('solution-required', 'unified-view');
+            
+            try {
+                log(`Sending data: ${params.toString()}`);
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: params,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    mode: 'no-cors' // Use no-cors to avoid CORS issues during testing
+                });
+                
+                log(`Response received (mode: no-cors)`);
+                log(`Note: In no-cors mode, we can't read the response content`);
+                log(`But if no error was thrown, the request likely succeeded`);
+                
+                showResult('Minimal data test completed! Check your Google Sheet for the test data.', 'success');
+                updateStatus('Minimal test completed');
+                
+            } catch (error) {
+                log(`Minimal test error: ${error.message}`);
+                log(`Error type: ${error.name}`);
+                log(`Stack: ${error.stack}`);
+                
+                if (error.message.includes('Failed to fetch')) {
+                    log('This is likely a CORS issue when testing locally');
+                    log('Try: 1) Test in the actual website 2) Use a local web server 3) Check the Google Sheet directly');
+                }
+                
+                showResult(`Minimal test failed: ${error.message}`, 'error');
+                updateStatus('Minimal test Failed');
+            }
+        }
+
+        document.getElementById('debug-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            log('Submitting full form...');
+            updateStatus('Submitting full form...');
+            
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            
+            for (let [key, value] of formData.entries()) {
+                params.append(key, value);
+                log(`Form field: ${key} = ${value}`);
+            }
+            
+            try {
+                log(`Sending full form data: ${params.toString()}`);
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: params,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    mode: 'cors'
+                });
+                
+                log(`Response status: ${response.status}`);
+                log(`Response headers: ${JSON.stringify([...response.headers])}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const responseText = await response.text();
+                log(`Full response: ${responseText}`);
+                
+                // Try to parse as JSON
+                try {
+                    const jsonResponse = JSON.parse(responseText);
+                    log(`Parsed JSON: ${JSON.stringify(jsonResponse, null, 2)}`);
+                    
+                    if (jsonResponse.status === 'success') {
+                        showResult('Form submission successful!', 'success');
+                        updateStatus('Form submission OK');
+                        this.reset();
+                    } else {
+                        showResult(`Form submission failed: ${jsonResponse.message}`, 'error');
+                        updateStatus('Form submission Failed');
+                    }
+                } catch (jsonError) {
+                    log(`JSON parse error: ${jsonError.message}`);
+                    showResult('Form submitted but response format unexpected', 'success');
+                    updateStatus('Form submitted (format issue)');
+                }
+                
+            } catch (error) {
+                log(`Full form error: ${error.message}`);
+                showResult(`Form submission failed: ${error.message}`, 'error');
+                updateStatus('Form submission Failed');
+            }
+        });        // Initial log
+        log('Debug page loaded successfully');
+        log(`Testing URL: ${GOOGLE_SCRIPT_URL}`);
+        log(`Current protocol: ${window.location.protocol}`);
+        log(`Current host: ${window.location.host}`);
+        log(`User agent: ${navigator.userAgent}`);
+        
+        if (window.location.protocol === 'file:') {
+            log('WARNING: Running from file:// protocol');
+            log('This may cause CORS issues. Consider using a local web server.');
+        }
+    </script>
+</body>
+</html>

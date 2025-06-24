@@ -592,3 +592,32 @@ a img.aligncenter {
     -webkit-transition-delay: 1.5s;
     transition-delay: 1.5s;
 }
+
+/* Responsive form styling */
+@media screen and (max-width: 750px) {
+    .contact-form input[type="text"],
+    .contact-form input[type="email"],
+    .contact-form input[type="tel"],
+    .contact-form select,
+    .contact-form textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 12px 0;
+    }
+    
+    .contact-form .form-group {
+        margin-bottom: 30px;
+    }
+    
+    .contact-form .contact-submit {
+        width: 100%;
+        padding: 18px 40px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .contact-form select {
+        background-position: right 5px center;
+        padding-right: 30px;
+    }
+}

@@ -245,15 +245,51 @@
                             </div>
                         </div>                        <div class="contact-page-right">
                             <div class="contact-form">
-                                <!-- Google Form Embed -->
-                                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd6LCWpyPRkaBF3CkWcOwDOfrHuogNuppIIDmCOnYP7uqBNrA/viewform?embedded=true" 
-                                        width="100%" 
-                                        height="800" 
-                                        frameborder="0" 
-                                        marginheight="0" 
-                                        marginwidth="0">
-                                    Loading…
-                                </iframe>
+                                <form id="contact-form" method="POST">
+                                    <div class="form-group">
+                                        <input type="text" name="company-name" id="company-name" placeholder="Company Name *" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <input type="text" name="location" id="location" placeholder="Location *" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <select name="fleet-size" id="fleet-size" title="Fleet Size" required>
+                                            <option value="" disabled selected>Select Fleet Size *</option>
+                                            <option value="less-than-50">Less than 50</option>
+                                            <option value="50-100">50-100</option>
+                                            <option value="above-100">Above 100</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <input type="text" name="spoc-name" id="spoc-name" placeholder="SPOC Name *" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <input type="tel" name="spoc-contact" id="spoc-contact" placeholder="SPOC Contact *" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <input type="email" name="spoc-email" id="spoc-email" placeholder="SPOC Email *" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <select name="solution-required" id="solution-required" title="Solution Required" required>
+                                            <option value="" disabled selected>Select Solution Required *</option>
+                                            <option value="unified-view">Unified View</option>
+                                            <option value="control-tower-services">Control Tower Services</option>
+                                            <option value="mobile-app-tracking">Mobile App Tracking Solution</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="contact-submit-holder">
+                                        <input type="submit" value="Send Message" class="contact-submit">
+                                    </div>
+                                </form>
+                                
+                                <div id="form-message" class="form-message"></div>
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -283,7 +319,7 @@
                 </div>
 
                 <div class="footer-right">
-                    <p><a href="PrivacyPolicyVEYZA.html" style="color: inherit; text-decoration: none;">© All Rights Reserved. VEYZA</a></p>
+                    <p><a href="PrivacyPolicyVEYZA.html">© All Rights Reserved. VEYZA</a></p>
                 </div>
             </div>
         </footer>
@@ -298,14 +334,7 @@
     <script type='text/javascript' src='js/jquery.prettyPhoto.js'></script>
     <script type='text/javascript' src='js/countUp.min.js'></script>
     <script type='text/javascript' src='js/slick.min.js'></script>
-    <script type='text/javascript' src='js/main.js'></script>
-    
-    <script>
-    $(document).ready(function() {
-        // Google Form is handled by Google - no custom JavaScript needed
-        console.log('Google Form loaded successfully');
-    });
-    </script>
+    <script type='text/javascript' src='js/main.js'></script>    <script type='text/javascript' src='js/google-sheets-form.js'></script>
 </body>
 
 </html>
